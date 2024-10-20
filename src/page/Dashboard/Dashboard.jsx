@@ -10,7 +10,8 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/
 import { addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
-
+import { FaPlus } from 'react-icons/fa'; // Icon importi
+import { MdCreateNewFolder } from "react-icons/md";
 
 
 // SearchByDate komponenti
@@ -43,6 +44,11 @@ const SearchByDate = ({ setSearchResults }) => {
     setSearchResults([]);
     setSearchDate('');
   };
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate('/createdata');
+  };
 
   return (
     <div className="w-[90%] m-auto h-[50px]">
@@ -55,12 +61,18 @@ const SearchByDate = ({ setSearchResults }) => {
           value={searchDate}
           onChange={(e) => setSearchDate(e.target.value)}
         />
-        <button type="submit" className="w-[50px] h-[100%] flex justify-center items-center bg-blue-500 hover:bg-blue-700 text-white rounded-md transition duration-300">
+        <button type="submit" className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-blue-500 hover:bg-blue-700 text-white rounded-md transition duration-300">
           <BsSearch />
         </button>
-        <button type="button" onClick={handleClearResults} className="w-[50px] h-[100%] flex justify-center items-center bg-red-500 hover:bg-red-700 text-white rounded-md transition duration-300">
+        <button type="button" onClick={handleClearResults} className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-red-500 hover:bg-red-700 text-white rounded-md transition duration-300">
           <IoClose />
         </button>
+        <button
+          className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-yellow-500 hover:bg-yellow-700 text-white rounded-md transition duration-300"
+          onClick={handleClick}>
+          <MdCreateNewFolder />
+        </button>
+
       </form>
     </div>
   );
@@ -114,14 +126,14 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, []);
 
+  // handleCreate funksiyasida
   const handleCreate = async (e) => {
     e.preventDefault();
-    setShowForm(false)
+    setShowForm(false);
     if (title === "" || img === null || montaj === "" || firstData === "") {
       return notification.error({
         message: "Input bo'sh",
         description: "Malumot to'liq kiritilmagan"
-
       });
     }
 
@@ -139,44 +151,9 @@ const Dashboard = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            const bekzodName = bekzodChecked ? 'Bekzod' : '';
-            const sirojName = sirojChecked ? 'Siroj' : '';
-            const murodName = murodChecked ? 'Murod' : '';
-            const zafarName = zafarChecked ? 'Zafar' : '';
-            const abrorName = abrorChecked ? 'Abror' : '';
-            const vohidName = vohidChecked ? 'Vohid' : '';
-            const otabekName = otabekChecked ? 'Otabek' : '';
-            const asrorName = asrorChecked ? 'Asror' : '';
-            const athamName = athamChecked ? 'Atham' : '';
-            const elyorName = elyorChecked ? 'Elyor' : '';
-
-
-
-            await addDoc(data, {
-              title,
-              descript: des,
-              img: downloadURL,
-              id: uuid(),
-              montaj,
-              firstData,
-              bekzod: bekzodName,
-              siroj: sirojName,
-              murod: murodName,
-              zafar: zafarName,
-              abror: abrorName,
-              vohid: vohidName,
-              otabek: otabekName,
-              asror: asrorName,
-              atham: athamName,
-              elyor: elyorName,
-
-            });
-            notification.success({
-              message: "Ma'lumot kiritildi",
-              description: "Sizning barcha ma'lumotlaringiz kiritildi"
-            });
-            setShowForm(false);
-            resetForm();
+            // Rasm yuklandi, images arrayga qo'shamiz
+            setImages((prev) => [...prev, downloadURL]);
+            // Qolgan kod...
           });
         }
       );
@@ -188,6 +165,7 @@ const Dashboard = () => {
       });
     }
   };
+
 
   const handleDelete = async (id) => {
     const deletePost = doc(db1, 'blogs', id);
@@ -394,18 +372,10 @@ const Dashboard = () => {
     }));
   };
 
-  const navigate = useNavigate();
 
-  const handleClick = () => {
-      navigate('/createdata');
-  };
 
   return (
     <div className="mt-[100px]">
-
-      <button className="flex m-auto border w-[100px] h-[40px] items-center justify-center mt-[15px]" onClick={handleClick}>
-        Add Data
-      </button>
       {/* Create Data */}
       {showForm && (
         <div className=" overflow-hidden mt-10 p-4 border w-full h-full border-gray-300 rounded-md fixed top-[-40px] left-0 right-0 backdrop-blur-[100px]">
@@ -600,45 +570,75 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {searchResults.length > 0 ? (
           searchResults.map((mall) => (
-            <div className="border border-black max-w-full max-h-full text-center m-auto rounded-md h-auto mt-6 shadow-lg" key={mall.id}>
-              <div className="box p-4">
-                <img className="w-full h-64 object-cover rounded-t-md" src={mall.img} alt="" />
-                <p className="mt-6 mb-4 text-[20px] text-blue-500">Zakaz vaqti: {mall.firstData}</p>
-                <h3 className="mt-6 text-2xl text-green-600 font-semibold">Ism: {mall.title}</h3>
-                <p className="mt-6 mb-4 text-[22px] text-red-500 ">To'y xaqida ma'lumot:</p>
-                <div className="border rounded-[10px] shadow-inner">
-                  <h2 className="text-[18px]">Montajchilar ro'yxati:</h2>
-                  <p className="text-[18px]">{mall.bekzod}</p>
-                  <p className="text-[18px]">{mall.siroj}</p>
-                  <p className="text-[18px]">{mall.murod}</p>
+            <div className="flex justify-center items-center mt-[100px]" key={mall.id}>
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden w-80 text-center transition-transform transform hover:-translate-y-1">
+                <img src={mall.img} alt="Image" className="w-full h-44 object-cover" />
+                <div className="p-5">
+                  <p className="text-gray-500 text-sm">{mall.firstData}</p>
+                  <h2 className="my-2 text-2xl font-bold text-gray-800">{mall.title}</h2>
 
-                </div><br />
-                <div className="border rounded-[10px] shadow-inner mb-[10px]">
-                  <h2 className="text-[18px] mt-[5px] h-auto">Video Operator:</h2>
-                  <p className="text-[18px]">{mall.zafar}</p>
-                  <p className="text-[18px] mb-[5px]">{mall.abror}</p>
-                  <p className="text-[18px] mb-[5px]">{mall.vohid}</p>
-                  <p className="text-[18px]">{mall.otabek}</p>
-                  <p className="text-[18px] mb-[5px]">{mall.asror}</p>
-                  <p className="text-[18px] mb-[5px]">{mall.atham}</p>
-                  <p className="text-[18px] mb-[5px]">{mall.elyor}</p>
+                  <p className="text-gray-700 text-sm">
+                    Montaj bajarilganmi: <span className="text-green-500 font-bold">{mall.montaj}</span>
+                  </p>
+
+                  {/* Montajchilar List */}
+                  <div className="border rounded-[10px] shadow-inner mb-4 mt-4">
+                    <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleMontaj(mall.id)}>
+                      <h2 className="text-[18px]">Montajchilar ro'yxati:</h2>
+                      <span className={`transform transition-transform ${openMontaj[mall.id] ? 'rotate-90' : ''}`}>
+                        ➤ {/* Replace this with an icon if preferred */}
+                      </span>
+                    </div>
+                    <div
+                      className={`mt-2 transition-all duration-300 ${openMontaj[mall.id] ? 'max-h-screen' : 'max-h-0 overflow-hidden'}`}
+                    >
+                      <p className="text-[18px]">{mall.bekzod}</p>
+                      <p className="text-[18px]">{mall.siroj}</p>
+                      <p className="text-[18px]">{mall.murod}</p>
+                    </div>
+                  </div>
+
+                  {/* Video Operators List */}
+                  <div className="border rounded-[10px] shadow-inner mb-4">
+                    <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleVideo(mall.id)}>
+                      <h2 className="text-[18px]">Video Operator:</h2>
+                      <span className={`transform transition-transform ${openVideo[mall.id] ? 'rotate-90' : ''}`}>
+                        ➤ {/* Replace this with an icon if preferred */}
+                      </span>
+                    </div>
+                    <div
+                      className={`mt-2 transition-all duration-300 ${openVideo[mall.id] ? 'max-h-screen' : 'max-h-0 overflow-hidden'}`}
+                    >
+                      <p className="text-[18px]">{mall.zafar}</p>
+                      <p className="text-[18px]">{mall.abror}</p>
+                      <p className="text-[18px]">{mall.vohid}</p>
+                      <p className="text-[18px]">{mall.otabek}</p>
+                      <p className="text-[18px]">{mall.asror}</p>
+                      <p className="text-[18px]">{mall.atham}</p>
+                      <p className="text-[18px]">{mall.elyor}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-between mb-4">
+                    <button
+                      className="bg-blue-500 text-white px-4 py-2 rounded-md"
+                      onClick={() => handleEdit(mall.id, mall.title, mall.descript,
+                        mall.img, mall.montaj,
+                        mall.firstData, mall.bekzod, mall.siroj,
+                        mall.murod, mall.zafar, mall.abror,
+                        mall.vohid, mall.otabek, mall.asror,
+                        mall.atham, mall.elyor)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="bg-red-500 text-white px-4 py-2 rounded-md"
+                      onClick={() => handleDelete(mall.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-                <textarea
-                  value={mall.descript}
-                  onChange={(e) => handleTextareaChange(e, mall.id)}
-                  placeholder="Ma'lumotlar"
-                  className="block w-[90%] p-2 mb-4 border h-[40px] border-gray-300 rounded-md m-auto"
-                  id={`descript-${mall.id}`}
-                  name={`descript-${mall.id}`}
-                />
-                <p className="mt-6 mb-4 text-[23px] text-blue-500"> Montaj bajarilganmi : <span className="text-green-600 font-[600]">{mall.montaj}</span></p>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={() => handleEdit(mall.id, mall.title, mall.descript,
-                  mall.img, mall.montaj,
-                  mall.firstData, mall.bekzod, mall.siroj,
-                  mall.murod, mall.zafar, mall.abror,
-                  mall.vohid, mall.otabek, mall.asror,
-                  mall.atham, mall.elyor)}>Edit</button>
-                <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => handleDelete(mall.id)}>Delete</button>
               </div>
             </div>
           ))

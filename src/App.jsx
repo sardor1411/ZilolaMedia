@@ -21,6 +21,8 @@ import {
   Dropdown,
   initTWE,
 } from "tw-elements";
+import { ImageProvider } from './protectedRoutes/ImageContext';
+import IditData from './page/Data create_edit/EditData';
 
 function App() {
   let user = localStorage.getItem('users');
@@ -35,6 +37,7 @@ function App() {
     localStorage.removeItem('users');
     navigate('/signin');
   };
+
 
 
 
@@ -81,7 +84,7 @@ function App() {
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <NavLink
                     to="/home"
-                    className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Home</NavLink>
@@ -89,7 +92,7 @@ function App() {
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <NavLink
                     to="/blog"
-                    className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Blog</NavLink>
@@ -97,7 +100,7 @@ function App() {
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <NavLink
                     to="/signin"
-                    className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Sign In</NavLink>
@@ -105,7 +108,7 @@ function App() {
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <NavLink
                     to="/dashboard"
-                    className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Dashboard</NavLink>
@@ -113,7 +116,7 @@ function App() {
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <NavLink
                     to="/bekzod"
-                    className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Bekzod</NavLink>
@@ -121,7 +124,7 @@ function App() {
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center " data-twe-nav-item-ref>
                   <NavLink
                     to="/workers"
-                    className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Workers</NavLink>
@@ -130,7 +133,7 @@ function App() {
                   <Link
                     to='/signin'
                     onClick={handleSignOut}
-                    className="text-black/60 transition duration-200 hover:text-black/80 hover:ease-in-out focus:text-black/80 active:text-black/80 motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Sign Out</Link>
@@ -188,6 +191,7 @@ function App() {
             </div>
           </div>
         </nav>
+        
       </div>
 
       <Routes>
@@ -196,12 +200,14 @@ function App() {
         <Route path="/jadval" element={<Jadval />} />
         <Route path="/home" element={<Home />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/editdata" element={<IditData />} />
+
         <Route path="/createdata" element={<CreateData />} />
         <Route path="/bossanaliz" element={<BossAnaliz />} />
         {/* <Route path='/dashboardtwo' element={<DashboardTwo />} /> */}
         <Route path="/bekzod" element={<Bekzod />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/dashboard" element={<ProtectRouteAdmin><Dashboard /></ProtectRouteAdmin>} />
+        <Route path="/dashboard" element={<ProtectRouteAdmin><ImageProvider><Dashboard /></ImageProvider></ProtectRouteAdmin>} />
         <Route path="/search" element={<Search />} />
       </Routes>
     </>
