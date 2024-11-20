@@ -28,3 +28,7 @@
   background-color: black;
   transform: translate(2s);
 }
+
+.logo {
+  border-radius: 80px;
+}

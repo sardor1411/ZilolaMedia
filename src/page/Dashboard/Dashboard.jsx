@@ -7,6 +7,7 @@ import { notification } from 'antd';
 import { IoIosCloseCircleOutline } from "react-icons/io";
 import { v4 as uuid } from "uuid";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+
 import { addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
 import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
@@ -14,69 +15,7 @@ import { FaPlus } from 'react-icons/fa'; // Icon importi
 import { MdCreateNewFolder } from "react-icons/md";
 
 
-// SearchByDate komponenti
-const SearchByDate = ({ setSearchResults }) => {
-  const [searchDate, setSearchDate] = useState("");
 
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (searchDate) {
-      try {
-        const q = query(
-          collection(db1, 'blogs'),
-          where('firstData', '==', searchDate)
-        );
-
-        const querySnapshot = await getDocs(q);
-        const searchResults = [];
-        querySnapshot.forEach((doc) => {
-          searchResults.push({ ...doc.data(), id: doc.id });
-        });
-
-        setSearchResults(searchResults);
-      } catch (error) {
-        console.error("Qidiruvda xato:", error);
-      }
-    }
-  };
-
-  const handleClearResults = () => {
-    setSearchResults([]);
-    setSearchDate('');
-  };
-  const navigate = useNavigate();
-
-  const handleClick = () => {
-    navigate('/createdata');
-  };
-
-  return (
-    <div className="w-[90%] m-auto h-[50px]">
-      <form className="flex justify-between h-[48px] gap-2" onSubmit={handleSearch}>
-        <input
-          type="date"
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          id="searchDate"
-          name="searchDate"
-          value={searchDate}
-          onChange={(e) => setSearchDate(e.target.value)}
-        />
-        <button type="submit" className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-blue-500 hover:bg-blue-700 text-white rounded-md transition duration-300">
-          <BsSearch />
-        </button>
-        <button type="button" onClick={handleClearResults} className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-red-500 hover:bg-red-700 text-white rounded-md transition duration-300">
-          <IoClose />
-        </button>
-        <button
-          className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-yellow-500 hover:bg-yellow-700 text-white rounded-md transition duration-300"
-          onClick={handleClick}>
-          <MdCreateNewFolder />
-        </button>
-
-      </form>
-    </div>
-  );
-};
 
 // Search komponenti
 const Dashboard = () => {
@@ -126,10 +65,27 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, []);
 
+  const handleFormVisibility = (e) => {
+    e.preventDefault();
+
+    // Formani faqat qiymatlar to'liq bo'lsa oching
+    if (title === "" || img === null || montaj === "" || firstData === "") {
+      notification.error({
+        message: "Input bo'sh",
+        description: "Malumot to'liq kiritilmagan"
+      });
+    } else {
+      setShowForm(true); // Formani ochish
+    }
+  };
+
+  const montajchilarchecked = bekzodChecked || sirojChecked || murodChecked;
+  const operatorschecked = zafarChecked || abrorChecked || vohidChecked || otabekChecked || asrorChecked || athamChecked || elyorChecked
+
   const handleCreate = async (e) => {
     e.preventDefault();
-    setShowForm(false);
-    if (title === "" || img === null || montaj === "" || firstData === "") {
+    setShowForm(true);
+    if (title === "" || img === null || montaj === "" || firstData === "" || !montajchilarchecked || !operatorschecked) {
       return notification.error({
         message: "Input bo'sh",
         description: "Malumot to'liq kiritilmagan"
@@ -148,10 +104,46 @@ const Dashboard = () => {
             description: error.message
           });
         },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            setImages((prev) => [...prev, downloadURL]);
+        async () => {
+          const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          const bekzodName = bekzodChecked ? 'Bekzod' : '';
+          const sirojName = sirojChecked ? 'Siroj' : '';
+          const murodName = murodChecked ? 'Murod' : '';
+          const zafarName = zafarChecked ? 'Zafar' : '';
+          const abrorName = abrorChecked ? 'Abror' : '';
+          const vohidName = vohidChecked ? 'Vohid' : '';
+          const otabekName = otabekChecked ? 'Otabek' : '';
+          const asrorName = asrorChecked ? 'Asror' : '';
+          const athamName = athamChecked ? 'Atham' : '';
+          const elyorName = elyorChecked ? 'Elyor' : '';
+
+          await addDoc(data, {
+            title,
+            descript: des,
+            img: downloadURL,
+            id: uuid(),
+            montaj,
+            firstData,
+            bekzod: bekzodName,
+            siroj: sirojName,
+            murod: murodName,
+            zafar: zafarName,
+            abror: abrorName,
+            vohid: vohidName,
+            otabek: otabekName,
+            asror: asrorName,
+            atham: athamName,
+            elyor: elyorName,
           });
+
+          notification.success({
+            message: "Ma'lumot kiritildi",
+            description: "Sizning barcha ma'lumotlaringiz kiritildi"
+          });
+
+          resetForm();
+          await navigate('/dashboard');
         }
       );
     } catch (error) {
@@ -162,6 +154,11 @@ const Dashboard = () => {
       });
     }
   };
+
+
+
+
+
 
 
   const handleDelete = async (id) => {
@@ -369,11 +366,68 @@ const Dashboard = () => {
     }));
   };
 
+  // SearchByDate komponenti
+  const SearchByDate = ({ setSearchResults }) => {
+    const [searchDate, setSearchDate] = useState("");
 
+    const handleSearch = async (e) => {
+      e.preventDefault();
+      if (searchDate) {
+        try {
+          const q = query(
+            collection(db1, 'blogs'),
+            where('firstData', '==', searchDate)
+          );
+
+          const querySnapshot = await getDocs(q);
+          const searchResults = [];
+          querySnapshot.forEach((doc) => {
+            searchResults.push({ ...doc.data(), id: doc.id });
+          });
+
+          setSearchResults(searchResults);
+        } catch (error) {
+          console.error("Qidiruvda xato:", error);
+        }
+      }
+    };
+
+    const handleClearResults = () => {
+      setSearchResults([]);
+      setSearchDate('');
+    };
+
+
+    return (
+      <div className="w-[90%] m-auto h-[50px]">
+        <form className="flex justify-between h-[48px] gap-2" onSubmit={handleSearch}>
+          <input
+            type="date"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            id="searchDate"
+            name="searchDate"
+            value={searchDate}
+            onChange={(e) => setSearchDate(e.target.value)}
+          />
+          <button type="submit" className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-blue-500 hover:bg-blue-700 text-white rounded-md transition duration-300">
+            <BsSearch />
+          </button>
+          <button type="button" onClick={handleClearResults} className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-red-500 hover:bg-red-700 text-white rounded-md transition duration-300">
+            <IoClose />
+          </button>
+          <button
+            className="min-w-[44.33px] min-h-[48px] flex justify-center items-center bg-yellow-500 hover:bg-yellow-700 text-white rounded-md transition duration-300"
+            onClick={handleCreate}>
+            <MdCreateNewFolder />
+          </button>
+
+        </form>
+      </div>
+    );
+  };
 
   return (
     <div className="mt-[100px]">
-      {/* Create Data */}
       {showForm && (
         <div className="fixed top-0 left-0 w-screen h-screen z-40 bg-black bg-opacity-60 backdrop-blur-sm mt-[100px]">
           <div className="overflow-hidden mt-10 p-6 bg-white w-[90%] sm:w-[70%] h-auto sm:h-auto mx-auto border border-gray-300 rounded-lg shadow-lg relative">
@@ -440,7 +494,6 @@ const Dashboard = () => {
                     </label>
                   </div>
 
-                  {/* Bekzod, Siroj, Murod */}
                   <h1 className="text-xl font-semibold mb-4">Ishchilar</h1>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <label htmlFor="bekzod" className="flex items-center">
@@ -478,7 +531,6 @@ const Dashboard = () => {
                     </label>
                   </div>
 
-                  {/* Video Operators */}
                   <h1 className="text-xl font-semibold mb-4">Video Operator</h1>
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <label htmlFor="zafar" className="flex items-center">
@@ -587,12 +639,11 @@ const Dashboard = () => {
                     Montaj bajarilganmi: <span className="text-green-500 font-bold">{mall.montaj}</span>
                   </p>
 
-                  {/* Montajchilar List */}
                   <div className="border rounded-[10px] shadow-inner mb-4 mt-4">
                     <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleMontaj(mall.id)}>
                       <h2 className="text-[18px]">Montajchilar ro'yxati:</h2>
                       <span className={`transform transition-transform ${openMontaj[mall.id] ? 'rotate-90' : ''}`}>
-                        ➤ {/* Replace this with an icon if preferred */}
+                        ➤
                       </span>
                     </div>
                     <div
@@ -604,12 +655,11 @@ const Dashboard = () => {
                     </div>
                   </div>
 
-                  {/* Video Operators List */}
                   <div className="border rounded-[10px] shadow-inner mb-4">
                     <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleVideo(mall.id)}>
                       <h2 className="text-[18px]">Video Operator:</h2>
                       <span className={`transform transition-transform ${openVideo[mall.id] ? 'rotate-90' : ''}`}>
-                        ➤ {/* Replace this with an icon if preferred */}
+                        ➤
                       </span>
                     </div>
                     <div
