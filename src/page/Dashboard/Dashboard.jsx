@@ -126,7 +126,6 @@ const Dashboard = () => {
     return () => unsubscribe();
   }, []);
 
-  // handleCreate funksiyasida
   const handleCreate = async (e) => {
     e.preventDefault();
     setShowForm(false);
@@ -151,9 +150,7 @@ const Dashboard = () => {
         },
         () => {
           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-            // Rasm yuklandi, images arrayga qo'shamiz
             setImages((prev) => [...prev, downloadURL]);
-            // Qolgan kod...
           });
         }
       );
@@ -378,42 +375,46 @@ const Dashboard = () => {
     <div className="mt-[100px]">
       {/* Create Data */}
       {showForm && (
-        <div className=" overflow-hidden mt-10 p-4 border w-full h-full border-gray-300 rounded-md fixed top-[-40px] left-0 right-0 backdrop-blur-[100px]">
-          <button onClick={() => setShowForm(false)} className="text-[30px] absolute top-[20px] left-[95%]">
-            <IoIosCloseCircleOutline />
-          </button>
-          <h2 className="text-2xl mb-4 font-[700]">Create New Post</h2>
-          <form onSubmit={isUpdate ? handleUpdate : handleCreate}>
-            <div className="relative bg-white p-6 rounded-lg shadow-lg">
-              <div className="w-[40%] border flex justify-between">
+        <div className="fixed top-0 left-0 w-screen h-screen z-40 bg-black bg-opacity-60 backdrop-blur-sm mt-[100px]">
+          <div className="overflow-hidden mt-10 p-6 bg-white w-[90%] sm:w-[70%] h-auto sm:h-auto mx-auto border border-gray-300 rounded-lg shadow-lg relative">
+            <button
+              onClick={() => setShowForm(false)}
+              className="text-[30px] absolute top-[20px] right-[20px] hover:text-red-500"
+            >
+              <IoIosCloseCircleOutline />
+            </button>
+            <h2 className="text-3xl mb-4 font-bold text-center">Create New Post</h2>
+            <form onSubmit={isUpdate ? handleUpdate : handleCreate}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="date">
-                    <h1 className="mb-[10px] text-xl font-semibold">Vaqtni kiriting</h1>
-                    <input
-                      id="date"
-                      type="date"
-                      className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
-                      value={firstData}
-                      onChange={(e) => setFirstData(e.target.value)}
-                    />
+                  <label htmlFor="date" className="block text-xl font-semibold mb-2">
+                    Vaqtni kiriting
                   </label>
+                  <input
+                    id="date"
+                    type="date"
+                    className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
+                    value={firstData}
+                    onChange={(e) => setFirstData(e.target.value)}
+                  />
                   <input
                     type="text"
                     placeholder="To'y Xona"
-                    className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
+                    className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                   />
                   <input
                     type="file"
-                    className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
+                    className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
                     onChange={handleFileChange}
                   />
                 </div>
+
                 <div>
-                  <h1 className="text-black text-[20px] mb-[10px]">Montaj qilinganmi?</h1>
-                  <div className="flex mb-[15px]">
-                    <label htmlFor="ha" className="flex text-black">
+                  <h1 className="text-xl font-semibold mb-4">Montaj qilinganmi?</h1>
+                  <div className="flex mb-4">
+                    <label htmlFor="ha" className="mr-6">
                       Bajarildi
                       <input
                         type="radio"
@@ -425,7 +426,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                    <label htmlFor="yo'q" className="ml-5 flex text-black">
+                    <label htmlFor="yo'q">
                       Bajartilmadi
                       <input
                         type="radio"
@@ -438,8 +439,11 @@ const Dashboard = () => {
                       />
                     </label>
                   </div>
-                  <div className="flex mb-[15px]">
-                    <label htmlFor="bekzod" className="flex text-black">
+
+                  {/* Bekzod, Siroj, Murod */}
+                  <h1 className="text-xl font-semibold mb-4">Ishchilar</h1>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <label htmlFor="bekzod" className="flex items-center">
                       Bekzod
                       <input
                         type="checkbox"
@@ -450,7 +454,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                    <label htmlFor="siroj" className="ml-5 flex text-black">
+                    <label htmlFor="siroj" className="flex items-center">
                       Siroj
                       <input
                         type="checkbox"
@@ -461,7 +465,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                    <label htmlFor="murod" className="ml-5 flex text-black">
+                    <label htmlFor="murod" className="flex items-center">
                       Murod
                       <input
                         type="checkbox"
@@ -473,9 +477,11 @@ const Dashboard = () => {
                       />
                     </label>
                   </div>
-                  <h1 className="text-black text-[20px] mb-[10px]">Video Operator</h1>
-                  <div className="flex mb-[15px]">
-                    <label htmlFor="zafar" className="flex text-black">
+
+                  {/* Video Operators */}
+                  <h1 className="text-xl font-semibold mb-4">Video Operator</h1>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <label htmlFor="zafar" className="flex items-center">
                       Zafar
                       <input
                         type="checkbox"
@@ -486,7 +492,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                    <label htmlFor="abror" className="ml-5 flex text-black">
+                    <label htmlFor="abror" className="flex items-center">
                       Abror
                       <input
                         type="checkbox"
@@ -497,7 +503,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                    <label htmlFor="vohid" className="ml-5 flex text-black">
+                    <label htmlFor="vohid" className="flex items-center">
                       Vohid
                       <input
                         type="checkbox"
@@ -508,7 +514,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                    <label htmlFor="otabek" className="ml-5 flex text-black">
+                    <label htmlFor="otabek" className="flex items-center">
                       Otabek
                       <input
                         type="checkbox"
@@ -519,9 +525,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                  </div>
-                  <div className="flex mb-[15px]">
-                    <label htmlFor="asror" className="ml-5 flex text-black">
+                    <label htmlFor="asror" className="flex items-center">
                       Asror
                       <input
                         type="checkbox"
@@ -532,7 +536,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                    <label htmlFor="atham" className="ml-5 flex text-black">
+                    <label htmlFor="atham" className="flex items-center">
                       Atham
                       <input
                         type="checkbox"
@@ -543,7 +547,7 @@ const Dashboard = () => {
                         className="ml-2"
                       />
                     </label>
-                    <label htmlFor="elyor" className="ml-5 flex text-black">
+                    <label htmlFor="elyor" className="flex items-center">
                       Elyor
                       <input
                         type="checkbox"
@@ -557,14 +561,16 @@ const Dashboard = () => {
                   </div>
                 </div>
               </div>
-            </div>
-
-
-            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              {isUpdate ? 'Update' : "Yaratish"}
-            </button>
-          </form>
+              <button
+                type="submit"
+                className="block w-full mt-6 py-3 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-md"
+              >
+                {isUpdate ? "Update" : "Yaratish"}
+              </button>
+            </form>
+          </div>
         </div>
+
       )}
       <SearchByDate setSearchResults={setSearchResults} />
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

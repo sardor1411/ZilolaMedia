@@ -574,518 +574,518 @@
 
 // ///////////////////////////////////////workers uchun
 
-// import { useState, useEffect } from "react";
-// import { collection, onSnapshot, query, where, getDocs } from "firebase/firestore";
-// import { db } from "../firebase";
-// import { BsSearch } from "react-icons/bs";
-// import { notification } from 'antd';
-// import { IoIosCloseCircleOutline } from "react-icons/io";
-// import { v4 as uuid } from "uuid";
-// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-// import { addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { collection, onSnapshot, query, where, getDocs } from "firebase/firestore";
+import { db } from "../firebase";
+import { BsSearch } from "react-icons/bs";
+import { notification } from 'antd';
+import { IoIosCloseCircleOutline } from "react-icons/io";
+import { v4 as uuid } from "uuid";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { addDoc, deleteDoc, updateDoc, doc } from "firebase/firestore";
 
 
 
-// // SearchByDate komponenti
-// const SearchByDate = ({ setSearchResults }) => {
-//   const [searchDate, setSearchDate] = useState("");
+// SearchByDate komponenti
+const SearchByDate = ({ setSearchResults }) => {
+  const [searchDate, setSearchDate] = useState("");
 
-//   const handleSearch = async (e) => {
-//     e.preventDefault();
-//     if (searchDate) {
-//       try {
-//         const q = query(
-//           collection(db, 'blogs'),
-//           where('firstData', '==', searchDate)
-//         );
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    if (searchDate) {
+      try {
+        const q = query(
+          collection(db, 'blogs'),
+          where('firstData', '==', searchDate)
+        );
 
-//         const querySnapshot = await getDocs(q);
-//         const searchResults = [];
-//         querySnapshot.forEach((doc) => {
-//           searchResults.push({ ...doc.data(), id: doc.id });
-//         });
+        const querySnapshot = await getDocs(q);
+        const searchResults = [];
+        querySnapshot.forEach((doc) => {
+          searchResults.push({ ...doc.data(), id: doc.id });
+        });
 
-//         setSearchResults(searchResults);
-//       } catch (error) {
-//         console.error("Qidiruvda xato:", error);
-//       }
-//     }
-//   };
+        setSearchResults(searchResults);
+      } catch (error) {
+        console.error("Qidiruvda xato:", error);
+      }
+    }
+  };
 
-//   const handleClearResults = () => {
-//     setSearchResults([]);
-//     setSearchDate('');
-//   };
+  const handleClearResults = () => {
+    setSearchResults([]);
+    setSearchDate('');
+  };
 
-//   return (
-//     <div className="border border-black w-[90%] m-auto h-[50px]">
-//       <div className="">
-//         <form className="flex justify-between h-[48px]" onSubmit={handleSearch}>
-//           <input
-//             type="date"
-//             className="w-[100%]"
-//             id="searchDate"
-//             name="searchDate"
-//             value={searchDate}
-//             onChange={(e) => setSearchDate(e.target.value)}
-//           />
-//           <button type="submit" className="border border-black w-[3%] h-[100%] flex justify-center items-center text-[25px]">
-//             <BsSearch />
-//           </button>
-//           <button type="button" onClick={handleClearResults} className="ml-2 border border-black h-[100%] flex justify-center items-center text-[15px]">
-//             Clear Results
-//           </button>
-//         </form>
-//       </div>
-//     </div>
-//   );
-// };
+  return (
+    <div className="border border-black w-[90%] m-auto h-[50px]">
+      <div className="">
+        <form className="flex justify-between h-[48px]" onSubmit={handleSearch}>
+          <input
+            type="date"
+            className="w-[100%]"
+            id="searchDate"
+            name="searchDate"
+            value={searchDate}
+            onChange={(e) => setSearchDate(e.target.value)}
+          />
+          <button type="submit" className="border border-black w-[3%] h-[100%] flex justify-center items-center text-[25px]">
+            <BsSearch />
+          </button>
+          <button type="button" onClick={handleClearResults} className="ml-2 border border-black h-[100%] flex justify-center items-center text-[15px]">
+            Clear Results
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
-// // Search komponenti
-// const Dashboard = () => {
+// Search komponenti
+const Dashboard = () => {
 
-//   const [img, setImg] = useState(null);
-
-
-
-
-//   const data = collection(db, 'blogs');
-//   const storage = getStorage();
-
-//   useEffect(() => {
-//     const unsubscribe = onSnapshot(data, (snapshot) => {
-//       const malumot = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-//       setBox(malumot);
-//     });
-
-//     return () => unsubscribe();
-//   }, []);
-
-//   const handleCreate = async (e) => {
-//     e.preventDefault();
-//     setShowForm(false)
-//     if ( img === null ) {
-//       return notification.error({
-//         message: "Input bo'sh",
-//         description: "Malumot to'liq kiritilmagan"
-
-//       });
-//     }
-
-//     try {
-//       const imgRef = ref(storage, `images/${img.name}-${uuid()}`);
-//       const uploadTask = uploadBytesResumable(imgRef, img);
-
-//       uploadTask.on('state_changed',
-//         (snapshot) => { },
-//         (error) => {
-//           notification.error({
-//             message: "Rasm yuklanmadi",
-//             description: error.message
-//           });
-//         },
-//         () => {
-//           getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+  const [img, setImg] = useState(null);
 
 
 
 
-//             await addDoc(data, {
-//               title,
-//               descript: des,
-//               img: downloadURL,
-//               id: uuid(),
+  const data = collection(db, 'blogs');
+  const storage = getStorage();
 
+  useEffect(() => {
+    const unsubscribe = onSnapshot(data, (snapshot) => {
+      const malumot = snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+      setBox(malumot);
+    });
 
-//             });
-//             notification.success({
-//               message: "Ma'lumot kiritildi",
-//               description: "Sizning barcha ma'lumotlaringiz kiritildi"
-//             });
-//             setShowForm(false);
-//             resetForm();
-//           });
-//         }
-//       );
-//     } catch (error) {
-//       console.error("Error uploading image:", error);
-//       notification.error({
-//         message: "Rasm yuklanmadi",
-//         description: error.message
-//       });
-//     }
-//   };
+    return () => unsubscribe();
+  }, []);
 
-//   const handleDelete = async (id) => {
-//     const deletePost = doc(db, 'blogs', id);
-//     await deleteDoc(deletePost);
-//     console.log(`Deleted post with id: ${id}`);
-//   };
+  const handleCreate = async (e) => {
+    e.preventDefault();
+    setShowForm(false)
+    if ( img === null ) {
+      return notification.error({
+        message: "Input bo'sh",
+        description: "Malumot to'liq kiritilmagan"
 
-//   const handleEdit = ( img) => {
+      });
+    }
 
-//     setImgUrl(img);
+    try {
+      const imgRef = ref(storage, `images/${img.name}-${uuid()}`);
+      const uploadTask = uploadBytesResumable(imgRef, img);
 
-//   };
-
-//   const handleUpdate = async (e) => {
-//     e.preventDefault();
-//     const updateData = doc(db, 'blogs', id);
-//     setShowForm(false)
+      uploadTask.on('state_changed',
+        (snapshot) => { },
+        (error) => {
+          notification.error({
+            message: "Rasm yuklanmadi",
+            description: error.message
+          });
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
 
 
 
-//     await updateDoc(updateData, {
 
-//       img: imgUrl
+            await addDoc(data, {
+              title,
+              descript: des,
+              img: downloadURL,
+              id: uuid(),
 
-//     });
 
-//     resetForm();
-//   };
+            });
+            notification.success({
+              message: "Ma'lumot kiritildi",
+              description: "Sizning barcha ma'lumotlaringiz kiritildi"
+            });
+            setShowForm(false);
+            resetForm();
+          });
+        }
+      );
+    } catch (error) {
+      console.error("Error uploading image:", error);
+      notification.error({
+        message: "Rasm yuklanmadi",
+        description: error.message
+      });
+    }
+  };
+
+  const handleDelete = async (id) => {
+    const deletePost = doc(db, 'blogs', id);
+    await deleteDoc(deletePost);
+    console.log(`Deleted post with id: ${id}`);
+  };
+
+  const handleEdit = ( img) => {
+
+    setImgUrl(img);
+
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const updateData = doc(db, 'blogs', id);
+    setShowForm(false)
+
+
+
+    await updateDoc(updateData, {
+
+      img: imgUrl
+
+    });
+
+    resetForm();
+  };
 
  
 
-//   const resetForm = () => {
+  const resetForm = () => {
 
-//     setImg(null);
-
-
-//   };
-
-//   const handleFileChange = (e) => {
-//     if (e.target.files[0]) {
-//       setImg(e.target.files[0]);
-//     }
-//   };
+    setImg(null);
 
 
-//   const [searchResults, setSearchResults] = useState([]);
+  };
 
-//   useEffect(() => {
-//     const data = collection(db, 'blogs');
-//     const unsubscribe = onSnapshot(data, (snapshot) => {
-//       const malumot = [];
-//       snapshot.docs.forEach((doc) => {
-//         malumot.push({ ...doc.data(), id: doc.id });
-//       });
-//       setBox(malumot);
-//     });
-
-//     return () => unsubscribe();
-//   }, []);
-
-//   const handleTextareaChange = (e, id) => {
-//     const newBox = box.map(item => {
-//       if (item.id === id) {
-//         return { ...item, descript: e.target.value };
-//       }
-//       return item;
-//     });
-//     setBox(newBox);
-//   };
-
-//   return (
-//     <>
-
-//       <button className="flex m-auto border w-[100px] h-[40px] items-center justify-center mt-[15px]" onClick={() => setShowForm(true)}>
-//         Add Data
-//       </button>
-//       {/* Create Data */}
-//       {showForm && (
-//         <div className=" overflow-hidden mt-10 p-4 border w-full h-full border-gray-300 rounded-md fixed top-[-40px] left-0 right-0 backdrop-blur-[100px]">
-//           <button onClick={() => setShowForm(false)} className="text-[30px] absolute top-[20px] left-[95%]">
-//             <IoIosCloseCircleOutline />
-//           </button>
-//           <h2 className="text-2xl mb-4 font-[700]">Create New Post</h2>
-//           <form onSubmit={isUpdate ? handleUpdate : handleCreate}>
-//             <div >
-//               <div className="w-[40%] border flex justify-between ">
-
-//                 <div>
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setImg(e.target.files[0]);
+    }
+  };
 
 
-//                   <label htmlFor="date">
-//                     <h1 className="mb-[10px]">Vaqtni kiriting</h1>
-//                     <input
-//                       id="date"
-//                       type="date"
-//                       className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
-//                       value={firstData}
-//                       onChange={(e) => setFirstData(e.target.value)}
-//                     />
-//                   </label>
-//                   <input
-//                     type="text"
-//                     placeholder="To'y Xona"
-//                     className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
-//                     value={title}
-//                     onChange={(e) => setTitle(e.target.value)}
-//                   />
-//                   <textarea
-//                     placeholder="To'y xaqida ma'lumotlar"
-//                     className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
-//                     value={des}
-//                     onChange={(e) => setDes(e.target.value)}
-//                   />
-//                   <input
-//                     type="file"
-//                     className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
-//                     onChange={handleFileChange}
-//                   />
-//                 </div>
-//                 <div className="">
-//                   <h1 className="text-black text-[20px] mb-[10px]">Montaj qilinganmi?</h1>
-//                   <div className="flex mb-[15px]">
-//                     <label htmlFor="ha" className="flex text-black">
-//                       Bajarildi
-//                       <input
-//                         type="radio"
-//                         id="ha"
-//                         name="montaj"
-//                         value="Bajarildi"
-//                         checked={montaj === 'Bajarildi'}
-//                         onChange={(e) => setMontaj(e.target.value)}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                     <label htmlFor="yo'q" className="ml-5 flex text-black">
-//                       Bajartilmadi
-//                       <input
-//                         type="radio"
-//                         id="yo'q"
-//                         name="montaj"
-//                         value="Bajartilmadi"
-//                         checked={montaj === 'Bajartilmadi'}
-//                         onChange={(e) => setMontaj(e.target.value)}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                   </div>
-//                   <div className="flex mb-[15px]">
-//                     <label htmlFor="bekzod" className="flex text-black">
-//                       Bekzod
-//                       <input
-//                         type="checkbox"
-//                         id="bekzod"
-//                         name="bekzod"
-//                         checked={bekzodChecked}
-//                         onChange={handleBekzodChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                     <label htmlFor="siroj" className="ml-5 flex text-black">
-//                       Siroj
-//                       <input
-//                         type="checkbox"
-//                         id="siroj"
-//                         name="siroj"
-//                         checked={sirojChecked}
-//                         onChange={handleSirojChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                     <label htmlFor="murod" className="ml-5 flex text-black">
-//                       Murod
-//                       <input
-//                         type="checkbox"
-//                         id="murod"
-//                         name="murod"
-//                         checked={murodChecked}
-//                         onChange={handleMurodChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                   </div>
-//                   <h1 className="text-black text-[20px] mb-[10px]">Video Operator</h1>
-//                   <div className="flex mb-[15px]">
-//                     <label htmlFor="zafar" className="flex text-black">
-//                       Zafar
-//                       <input
-//                         type="checkbox"
-//                         id="zafar"
-//                         name="zafar"
-//                         checked={zafarChecked}
-//                         onChange={handleZafarChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                     <label htmlFor="abror" className="ml-5 flex text-black">
-//                       Abror
-//                       <input
-//                         type="checkbox"
-//                         id="abror"
-//                         name="abror"
-//                         checked={abrorChecked}
-//                         onChange={handleAbrorChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                     <label htmlFor="vohid" className="ml-5 flex text-black">
-//                       Vohid
-//                       <input
-//                         type="checkbox"
-//                         id="vohid"
-//                         name="vohid"
-//                         checked={vohidChecked}
-//                         onChange={handleVohidChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                     <label htmlFor="otabek" className="ml-5 flex text-black">
-//                       Otabek
-//                       <input
-//                         type="checkbox"
-//                         id="otabek"
-//                         name="otabek"
-//                         checked={otabekChecked}
-//                         onChange={handleOtabekChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                   </div>
-//                   <div className="flex mb-[15px]">
-//                     <label htmlFor="asror" className="ml-5 flex text-black">
-//                       Asror
-//                       <input
-//                         type="checkbox"
-//                         id="asror"
-//                         name="asror"
-//                         checked={asrorChecked}
-//                         onChange={handleAsrorChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                     <label htmlFor="atham" className="ml-5 flex text-black">
-//                       Atham
-//                       <input
-//                         type="checkbox"
-//                         id="atham"
-//                         name="atham"
-//                         checked={athamChecked}
-//                         onChange={handleAthamChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                     <label htmlFor="elyor" className="ml-5 flex text-black">
-//                       Elyor
-//                       <input
-//                         type="checkbox"
-//                         id="elyor"
-//                         name="elyor"
-//                         checked={elyorChecked}
-//                         onChange={handleElyorChange}
-//                         className="ml-2"
-//                       />
-//                     </label>
-//                   </div>
-//                 </div>
-//               </div>
-//             </div>
+  const [searchResults, setSearchResults] = useState([]);
 
-//             <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-//               {isUpdate ? 'Update' : "Yaratish"}
-//             </button>
-//           </form>
-//         </div>
-//       )}
-//       <SearchByDate setSearchResults={setSearchResults} />
-//       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-//         {searchResults.length > 0 ? (
-//           searchResults.map((mall) => (
-//             <div className="border border-black max-w-full max-h-full text-center m-auto rounded-md h-auto mt-6 shadow-lg" key={mall.id}>
-//               <div className="box p-4">
-//                 <img className="w-full h-64 object-cover rounded-t-md" src={mall.img} alt="" />
-//                 <p className="mt-6 mb-4 text-[20px] text-blue-500">Zakaz vaqti: {mall.firstData}</p>
-//                 <h3 className="mt-6 text-2xl text-green-600 font-semibold">Ism: {mall.title}</h3>
-//                 <p className="mt-6 mb-4 text-[22px] text-red-500 ">To'y xaqida ma'lumot:</p>
-//                 <div className="border rounded-[10px] shadow-inner">
-//                   <h2 className="text-[18px]">Montajchilar ro'yxati:</h2>
-//                   <p className="text-[18px]">{mall.bekzod}</p>
-//                   <p className="text-[18px]">{mall.siroj}</p>
-//                   <p className="text-[18px]">{mall.murod}</p>
+  useEffect(() => {
+    const data = collection(db, 'blogs');
+    const unsubscribe = onSnapshot(data, (snapshot) => {
+      const malumot = [];
+      snapshot.docs.forEach((doc) => {
+        malumot.push({ ...doc.data(), id: doc.id });
+      });
+      setBox(malumot);
+    });
 
-//                 </div><br />
-//                 <div className="border rounded-[10px] shadow-inner mb-[10px]">
-//                   <h2 className="text-[18px] mt-[5px] h-auto">Video Operator:</h2>
-//                   <p className="text-[18px]">{mall.zafar}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.abror}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.vohid}</p>
-//                   <p className="text-[18px]">{mall.otabek}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.asror}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.atham}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.elyor}</p>
-//                 </div>
-//                 <textarea
-//                   value={mall.descript}
-//                   onChange={(e) => handleTextareaChange(e, mall.id)}
-//                   placeholder="Ma'lumotlar"
-//                   className="block w-[90%] p-2 mb-4 border h-[40px] border-gray-300 rounded-md m-auto"
-//                   id={`descript-${mall.id}`}
-//                   name={`descript-${mall.id}`}
-//                 />
-//                 <p className="mt-6 mb-4 text-[23px] text-blue-500"> Montaj bajarilganmi : <span className="text-green-600 font-[600]">{mall.montaj}</span></p>
-//                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={() => handleEdit(mall.id, mall.title, mall.descript,
-//                   mall.img, mall.montaj,
-//                   mall.firstData, mall.bekzod, mall.siroj,
-//                   mall.murod, mall.zafar, mall.abror,
-//                   mall.vohid, mall.otabek, mall.asror,
-//                   mall.atham, mall.elyor)}>Edit</button>
-//                 <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => handleDelete(mall.id)}>Delete</button>
-//               </div>
-//             </div>
-//           ))
-//         ) : (
-//           box.map((mall) => (
-//             <div className="border border-black max-w-full max-h-full text-center m-auto rounded-md h-auto mt-6 shadow-lg" key={mall.id}>
-//               <div className="box p-4">
-//                 <img className="w-full h-64 object-cover rounded-t-md" src={mall.img} alt="" />
-//                 <p className="mt-6 mb-4 text-[20px] text-blue-500">Zakaz vaqti: {mall.firstData}</p>
-//                 <h3 className="mt-6 text-2xl text-green-600 font-semibold">Ism: {mall.title}</h3>
-//                 <p className="mt-6 mb-4 text-[22px] text-red-500 ">To'y xaqida ma'lumot:</p>
-//                 <div className="border rounded-[10px] shadow-inner">
-//                   <h2 className="text-[18px]">Montajchilar ro'yxati:</h2>
-//                   <p className="text-[18px]">{mall.bekzod}</p>
-//                   <p className="text-[18px]">{mall.siroj}</p>
-//                   <p className="text-[18px]">{mall.murod}</p>
+    return () => unsubscribe();
+  }, []);
 
-//                 </div><br />
-//                 <div className="border rounded-[10px] shadow-inner mb-[10px]">
-//                   <h2 className="text-[18px] mt-[5px] h-auto">Video Operator:</h2>
-//                   <p className="text-[18px]">{mall.zafar}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.abror}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.vohid}</p>
-//                   <p className="text-[18px]">{mall.otabek}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.asror}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.atham}</p>
-//                   <p className="text-[18px] mb-[5px]">{mall.elyor}</p>
-//                 </div>
-//                 <textarea
-//                   value={mall.descript}
-//                   onChange={(e) => handleTextareaChange(e, mall.id)}
-//                   placeholder="Ma'lumotlar"
-//                   className="block w-[90%] p-2 mb-4 border h-[40px] border-gray-300 rounded-md m-auto"
-//                   id={`descript-${mall.id}`}
-//                   name={`descript-${mall.id}`}
-//                 />
-//                 <p className="mt-6 mb-4 text-[23px] text-blue-500"> Montaj bajarilganmi : <span className="text-green-600 font-[600]">{mall.montaj}</span></p>
-//                 <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={() => handleEdit(mall.id, mall.title, mall.descript,
-//                   mall.img, mall.montaj,
-//                   mall.firstData, mall.bekzod, mall.siroj,
-//                   mall.murod, mall.zafar, mall.abror,
-//                   mall.vohid, mall.otabek, mall.asror,
-//                   mall.atham, mall.elyor)}>Edit</button>
-//                 <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => handleDelete(mall.id)}>Delete</button>
-//               </div>
-//             </div>
-//           ))
-//         )}
-//       </div>
-//     </>
-//   )
-// }
+  const handleTextareaChange = (e, id) => {
+    const newBox = box.map(item => {
+      if (item.id === id) {
+        return { ...item, descript: e.target.value };
+      }
+      return item;
+    });
+    setBox(newBox);
+  };
 
-// export default Dashboard;
+  return (
+    <>
+
+      <button className="flex m-auto border w-[100px] h-[40px] items-center justify-center mt-[15px]" onClick={() => setShowForm(true)}>
+        Add Data
+      </button>
+      {/* Create Data */}
+      {showForm && (
+        <div className=" overflow-hidden mt-10 p-4 border w-full h-full border-gray-300 rounded-md fixed top-[-40px] left-0 right-0 backdrop-blur-[100px]">
+          <button onClick={() => setShowForm(false)} className="text-[30px] absolute top-[20px] left-[95%]">
+            <IoIosCloseCircleOutline />
+          </button>
+          <h2 className="text-2xl mb-4 font-[700]">Create New Post</h2>
+          <form onSubmit={isUpdate ? handleUpdate : handleCreate}>
+            <div >
+              <div className="w-[40%] border flex justify-between ">
+
+                <div>
+
+
+                  <label htmlFor="date">
+                    <h1 className="mb-[10px]">Vaqtni kiriting</h1>
+                    <input
+                      id="date"
+                      type="date"
+                      className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
+                      value={firstData}
+                      onChange={(e) => setFirstData(e.target.value)}
+                    />
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="To'y Xona"
+                    className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <textarea
+                    placeholder="To'y xaqida ma'lumotlar"
+                    className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
+                    value={des}
+                    onChange={(e) => setDes(e.target.value)}
+                  />
+                  <input
+                    type="file"
+                    className="block w-[70%] p-2 mb-4 border border-gray-300 rounded-md"
+                    onChange={handleFileChange}
+                  />
+                </div>
+                <div className="">
+                  <h1 className="text-black text-[20px] mb-[10px]">Montaj qilinganmi?</h1>
+                  <div className="flex mb-[15px]">
+                    <label htmlFor="ha" className="flex text-black">
+                      Bajarildi
+                      <input
+                        type="radio"
+                        id="ha"
+                        name="montaj"
+                        value="Bajarildi"
+                        checked={montaj === 'Bajarildi'}
+                        onChange={(e) => setMontaj(e.target.value)}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="yo'q" className="ml-5 flex text-black">
+                      Bajartilmadi
+                      <input
+                        type="radio"
+                        id="yo'q"
+                        name="montaj"
+                        value="Bajartilmadi"
+                        checked={montaj === 'Bajartilmadi'}
+                        onChange={(e) => setMontaj(e.target.value)}
+                        className="ml-2"
+                      />
+                    </label>
+                  </div>
+                  <div className="flex mb-[15px]">
+                    <label htmlFor="bekzod" className="flex text-black">
+                      Bekzod
+                      <input
+                        type="checkbox"
+                        id="bekzod"
+                        name="bekzod"
+                        checked={bekzodChecked}
+                        onChange={handleBekzodChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="siroj" className="ml-5 flex text-black">
+                      Siroj
+                      <input
+                        type="checkbox"
+                        id="siroj"
+                        name="siroj"
+                        checked={sirojChecked}
+                        onChange={handleSirojChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="murod" className="ml-5 flex text-black">
+                      Murod
+                      <input
+                        type="checkbox"
+                        id="murod"
+                        name="murod"
+                        checked={murodChecked}
+                        onChange={handleMurodChange}
+                        className="ml-2"
+                      />
+                    </label>
+                  </div>
+                  <h1 className="text-black text-[20px] mb-[10px]">Video Operator</h1>
+                  <div className="flex mb-[15px]">
+                    <label htmlFor="zafar" className="flex text-black">
+                      Zafar
+                      <input
+                        type="checkbox"
+                        id="zafar"
+                        name="zafar"
+                        checked={zafarChecked}
+                        onChange={handleZafarChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="abror" className="ml-5 flex text-black">
+                      Abror
+                      <input
+                        type="checkbox"
+                        id="abror"
+                        name="abror"
+                        checked={abrorChecked}
+                        onChange={handleAbrorChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="vohid" className="ml-5 flex text-black">
+                      Vohid
+                      <input
+                        type="checkbox"
+                        id="vohid"
+                        name="vohid"
+                        checked={vohidChecked}
+                        onChange={handleVohidChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="otabek" className="ml-5 flex text-black">
+                      Otabek
+                      <input
+                        type="checkbox"
+                        id="otabek"
+                        name="otabek"
+                        checked={otabekChecked}
+                        onChange={handleOtabekChange}
+                        className="ml-2"
+                      />
+                    </label>
+                  </div>
+                  <div className="flex mb-[15px]">
+                    <label htmlFor="asror" className="ml-5 flex text-black">
+                      Asror
+                      <input
+                        type="checkbox"
+                        id="asror"
+                        name="asror"
+                        checked={asrorChecked}
+                        onChange={handleAsrorChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="atham" className="ml-5 flex text-black">
+                      Atham
+                      <input
+                        type="checkbox"
+                        id="atham"
+                        name="atham"
+                        checked={athamChecked}
+                        onChange={handleAthamChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="elyor" className="ml-5 flex text-black">
+                      Elyor
+                      <input
+                        type="checkbox"
+                        id="elyor"
+                        name="elyor"
+                        checked={elyorChecked}
+                        onChange={handleElyorChange}
+                        className="ml-2"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              {isUpdate ? 'Update' : "Yaratish"}
+            </button>
+          </form>
+        </div>
+      )}
+      <SearchByDate setSearchResults={setSearchResults} />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {searchResults.length > 0 ? (
+          searchResults.map((mall) => (
+            <div className="border border-black max-w-full max-h-full text-center m-auto rounded-md h-auto mt-6 shadow-lg" key={mall.id}>
+              <div className="box p-4">
+                <img className="w-full h-64 object-cover rounded-t-md" src={mall.img} alt="" />
+                <p className="mt-6 mb-4 text-[20px] text-blue-500">Zakaz vaqti: {mall.firstData}</p>
+                <h3 className="mt-6 text-2xl text-green-600 font-semibold">Ism: {mall.title}</h3>
+                <p className="mt-6 mb-4 text-[22px] text-red-500 ">To'y xaqida ma'lumot:</p>
+                <div className="border rounded-[10px] shadow-inner">
+                  <h2 className="text-[18px]">Montajchilar ro'yxati:</h2>
+                  <p className="text-[18px]">{mall.bekzod}</p>
+                  <p className="text-[18px]">{mall.siroj}</p>
+                  <p className="text-[18px]">{mall.murod}</p>
+
+                </div><br />
+                <div className="border rounded-[10px] shadow-inner mb-[10px]">
+                  <h2 className="text-[18px] mt-[5px] h-auto">Video Operator:</h2>
+                  <p className="text-[18px]">{mall.zafar}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.abror}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.vohid}</p>
+                  <p className="text-[18px]">{mall.otabek}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.asror}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.atham}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.elyor}</p>
+                </div>
+                <textarea
+                  value={mall.descript}
+                  onChange={(e) => handleTextareaChange(e, mall.id)}
+                  placeholder="Ma'lumotlar"
+                  className="block w-[90%] p-2 mb-4 border h-[40px] border-gray-300 rounded-md m-auto"
+                  id={`descript-${mall.id}`}
+                  name={`descript-${mall.id}`}
+                />
+                <p className="mt-6 mb-4 text-[23px] text-blue-500"> Montaj bajarilganmi : <span className="text-green-600 font-[600]">{mall.montaj}</span></p>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={() => handleEdit(mall.id, mall.title, mall.descript,
+                  mall.img, mall.montaj,
+                  mall.firstData, mall.bekzod, mall.siroj,
+                  mall.murod, mall.zafar, mall.abror,
+                  mall.vohid, mall.otabek, mall.asror,
+                  mall.atham, mall.elyor)}>Edit</button>
+                <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => handleDelete(mall.id)}>Delete</button>
+              </div>
+            </div>
+          ))
+        ) : (
+          box.map((mall) => (
+            <div className="border border-black max-w-full max-h-full text-center m-auto rounded-md h-auto mt-6 shadow-lg" key={mall.id}>
+              <div className="box p-4">
+                <img className="w-full h-64 object-cover rounded-t-md" src={mall.img} alt="" />
+                <p className="mt-6 mb-4 text-[20px] text-blue-500">Zakaz vaqti: {mall.firstData}</p>
+                <h3 className="mt-6 text-2xl text-green-600 font-semibold">Ism: {mall.title}</h3>
+                <p className="mt-6 mb-4 text-[22px] text-red-500 ">To'y xaqida ma'lumot:</p>
+                <div className="border rounded-[10px] shadow-inner">
+                  <h2 className="text-[18px]">Montajchilar ro'yxati:</h2>
+                  <p className="text-[18px]">{mall.bekzod}</p>
+                  <p className="text-[18px]">{mall.siroj}</p>
+                  <p className="text-[18px]">{mall.murod}</p>
+
+                </div><br />
+                <div className="border rounded-[10px] shadow-inner mb-[10px]">
+                  <h2 className="text-[18px] mt-[5px] h-auto">Video Operator:</h2>
+                  <p className="text-[18px]">{mall.zafar}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.abror}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.vohid}</p>
+                  <p className="text-[18px]">{mall.otabek}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.asror}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.atham}</p>
+                  <p className="text-[18px] mb-[5px]">{mall.elyor}</p>
+                </div>
+                <textarea
+                  value={mall.descript}
+                  onChange={(e) => handleTextareaChange(e, mall.id)}
+                  placeholder="Ma'lumotlar"
+                  className="block w-[90%] p-2 mb-4 border h-[40px] border-gray-300 rounded-md m-auto"
+                  id={`descript-${mall.id}`}
+                  name={`descript-${mall.id}`}
+                />
+                <p className="mt-6 mb-4 text-[23px] text-blue-500"> Montaj bajarilganmi : <span className="text-green-600 font-[600]">{mall.montaj}</span></p>
+                <button className="bg-blue-500 text-white px-4 py-2 rounded-md" onClick={() => handleEdit(mall.id, mall.title, mall.descript,
+                  mall.img, mall.montaj,
+                  mall.firstData, mall.bekzod, mall.siroj,
+                  mall.murod, mall.zafar, mall.abror,
+                  mall.vohid, mall.otabek, mall.asror,
+                  mall.atham, mall.elyor)}>Edit</button>
+                <button className="bg-red-500 text-white px-4 py-2 rounded-md" onClick={() => handleDelete(mall.id)}>Delete</button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </>
+  )
+}
+
+export default Dashboard;
 
 
 /////////////////////////////////////////inspect menu block
@@ -1304,3 +1304,201 @@ const Home = () => {
 export default Home;
 
 
+<div className="mt-[100px]">
+      {/* Create Data */}
+      {showForm && (
+        <div className="fixed top-0 left-0 w-screen h-screen z-40 bg-black bg-opacity-60 backdrop-blur-sm">
+          <div className="overflow-hidden p-6 bg-white w-[90%] sm:w-[70%] h-auto sm:h-auto mx-auto border border-gray-300 rounded-lg shadow-lg relative mt-[100px]">
+            <button
+              onClick={() => setShowForm(false)}
+              className="text-[30px] absolute top-[20px] right-[20px] hover:text-red-500"
+            >
+              <IoIosCloseCircleOutline />
+            </button>
+            <h2 className="text-3xl mb-4 font-bold text-center">Create New Post</h2>
+            <form onSubmit={isUpdate ? handleUpdate : handleCreate}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="date" className="block text-xl font-semibold mb-2">
+                    Vaqtni kiriting
+                  </label>
+                  <input
+                    id="date"
+                    type="date"
+                    className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
+                    value={firstData}
+                    onChange={(e) => setFirstData(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="To'y Xona"
+                    className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <input
+                    type="file"
+                    className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
+                    onChange={handleFileChange}
+                  />
+                </div>
+
+                <div>
+                  <h1 className="text-xl font-semibold mb-4">Montaj qilinganmi?</h1>
+                  <div className="flex mb-4">
+                    <label htmlFor="ha" className="mr-6">
+                      Bajarildi
+                      <input
+                        type="radio"
+                        id="ha"
+                        name="montaj"
+                        value="Bajarildi"
+                        checked={montaj === 'Bajarildi'}
+                        onChange={(e) => setMontaj(e.target.value)}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="yo'q">
+                      Bajartilmadi
+                      <input
+                        type="radio"
+                        id="yo'q"
+                        name="montaj"
+                        value="Bajartilmadi"
+                        checked={montaj === 'Bajartilmadi'}
+                        onChange={(e) => setMontaj(e.target.value)}
+                        className="ml-2"
+                      />
+                    </label>
+                  </div>
+
+                  {/* Bekzod, Siroj, Murod */}
+                  <h1 className="text-xl font-semibold mb-4">Ishchilar</h1>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <label htmlFor="bekzod" className="flex items-center">
+                      Bekzod
+                      <input
+                        type="checkbox"
+                        id="bekzod"
+                        name="bekzod"
+                        checked={bekzodChecked}
+                        onChange={handleBekzodChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="siroj" className="flex items-center">
+                      Siroj
+                      <input
+                        type="checkbox"
+                        id="siroj"
+                        name="siroj"
+                        checked={sirojChecked}
+                        onChange={handleSirojChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="murod" className="flex items-center">
+                      Murod
+                      <input
+                        type="checkbox"
+                        id="murod"
+                        name="murod"
+                        checked={murodChecked}
+                        onChange={handleMurodChange}
+                        className="ml-2"
+                      />
+                    </label>
+                  </div>
+
+                  {/* Video Operators */}
+                  <h1 className="text-xl font-semibold mb-4">Video Operator</h1>
+                  <div className="grid grid-cols-2 gap-4 mb-4">
+                    <label htmlFor="zafar" className="flex items-center">
+                      Zafar
+                      <input
+                        type="checkbox"
+                        id="zafar"
+                        name="zafar"
+                        checked={zafarChecked}
+                        onChange={handleZafarChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="abror" className="flex items-center">
+                      Abror
+                      <input
+                        type="checkbox"
+                        id="abror"
+                        name="abror"
+                        checked={abrorChecked}
+                        onChange={handleAbrorChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="vohid" className="flex items-center">
+                      Vohid
+                      <input
+                        type="checkbox"
+                        id="vohid"
+                        name="vohid"
+                        checked={vohidChecked}
+                        onChange={handleVohidChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="otabek" className="flex items-center">
+                      Otabek
+                      <input
+                        type="checkbox"
+                        id="otabek"
+                        name="otabek"
+                        checked={otabekChecked}
+                        onChange={handleOtabekChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="asror" className="flex items-center">
+                      Asror
+                      <input
+                        type="checkbox"
+                        id="asror"
+                        name="asror"
+                        checked={asrorChecked}
+                        onChange={handleAsrorChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="atham" className="flex items-center">
+                      Atham
+                      <input
+                        type="checkbox"
+                        id="atham"
+                        name="atham"
+                        checked={athamChecked}
+                        onChange={handleAthamChange}
+                        className="ml-2"
+                      />
+                    </label>
+                    <label htmlFor="elyor" className="flex items-center">
+                      Elyor
+                      <input
+                        type="checkbox"
+                        id="elyor"
+                        name="elyor"
+                        checked={elyorChecked}
+                        onChange={handleElyorChange}
+                        className="ml-2"
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <button
+                type="submit"
+                className="block w-full mt-6 py-3 bg-blue-500 hover:bg-blue-700 text-white font-bold rounded-md"
+              >
+                {isUpdate ? "Update" : "Yaratish"}
+              </button>
+            </form>
+          </div>
+        </div>
