@@ -55,7 +55,6 @@ function App() {
           className=" relative top-2 left-1/2 transform -translate-x-1/2  flex-no-wrap items-center py-2 shadow-dark-mild  lg:flex-wrap lg:justify-start lg:py-4 rounded-[20px] bg-[#cccaca] flex w-[90%]">
           <div className="flex w-full flex-wrap items-center justify-between px-3">
             <button
-              onClick={handleNavigate}
               className="block border-0 bg-transparent px-2 text-black/50 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden"
               type="button"
               data-twe-collapse-init
