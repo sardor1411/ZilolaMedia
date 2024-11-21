@@ -1,4 +1,4 @@
-import { Routes, Route, Link, useNavigate, NavLink } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, NavLink, Navigate } from 'react-router-dom';
 import { useState, useContext, useEffect } from 'react';
 import { AuthContext } from './context/AuthContext';
 import SignUp from './page/SignIn-Up/SignUp';
@@ -38,6 +38,13 @@ function App() {
     navigate('/signin');
   };
 
+  const handleNavigate = (e) => {
+    e.preventDefault();
+    navigate('/dashboard');
+  };
+
+
+
 
 
 
@@ -48,6 +55,7 @@ function App() {
           className=" relative top-2 left-1/2 transform -translate-x-1/2  flex-no-wrap items-center py-2 shadow-dark-mild  lg:flex-wrap lg:justify-start lg:py-4 rounded-[20px] bg-[#cccaca] flex w-[90%]">
           <div className="flex w-full flex-wrap items-center justify-between px-3">
             <button
+              onClick={handleNavigate}
               className="block border-0 bg-transparent px-2 text-black/50 hover:no-underline hover:shadow-none focus:no-underline focus:shadow-none focus:outline-none focus:ring-0 dark:text-neutral-200 lg:hidden"
               type="button"
               data-twe-collapse-init
@@ -97,14 +105,7 @@ function App() {
                     data-twe-nav-link-ref
                   >Blog</NavLink>
                 </li>
-                <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
-                  <NavLink
-                    to="/signin"
-                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
-                    href="#"
-                    data-twe-nav-link-ref
-                  >Sign In</NavLink>
-                </li>
+
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <NavLink
                     to="/dashboard"
@@ -113,14 +114,14 @@ function App() {
                     data-twe-nav-link-ref
                   >Dashboard</NavLink>
                 </li>
-                <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
+                {/* <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <NavLink
                     to="/bekzod"
                     className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Bekzod</NavLink>
-                </li>
+                </li> */}
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center " data-twe-nav-item-ref>
                   <NavLink
                     to="/workers"
@@ -128,6 +129,14 @@ function App() {
                     href="#"
                     data-twe-nav-link-ref
                   >Workers</NavLink>
+                </li>
+                <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
+                  <NavLink
+                    to="/signin"
+                    className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
+                    href="#"
+                    data-twe-nav-link-ref
+                  >Sign In</NavLink>
                 </li>
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <Link
@@ -178,20 +187,21 @@ function App() {
                   data-twe-dropdown-menu-ref>
                   <li>
                     <a
+                      onClick={handleNavigate}
                       className="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 dark:text-neutral-200 hover:bg-gray-100 hover:rounded-lg"
-                      href="#">Dashboard</a>
+                      href="dashboard">Boshqaruv</a>
                   </li>
                   <li>
                     <a
                       className="block w-full whitespace-nowrap bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 dark:text-neutral-200 hover:bg-gray-100 hover:rounded-lg"
-                      href="#">Settings</a>
+                      href="settings">Sozlamlar</a>
                   </li>
                 </ul>
               </div>
             </div>
           </div>
         </nav>
-        
+
       </div>
 
       <Routes>

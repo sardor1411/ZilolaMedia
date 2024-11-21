@@ -159,7 +159,8 @@ function Workers() {
 
   return (
     <div className='h-screen border'>
-      <SplitPane
+      <h1 className='mt-[150px] text-center text-[50px]'>Tez orada ishga tushadi</h1>
+      {/* <SplitPane
         split='vertical'
         sizes={sizes}
         onChange={setSizes}
@@ -265,7 +266,7 @@ function Workers() {
             )}
           </div>
         </Pane>
-      </SplitPane>
+      </SplitPane> */}
     </div>
   );
 }

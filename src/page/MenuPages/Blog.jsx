@@ -4,7 +4,7 @@ function Blog() {
     return (
         <>
         
-            <h1 className="text-center mt-[50px]">Blog</h1>
+            <h1 className="text-center mt-[150px] text-[50px]">Tez orada ishga tushadi</h1>
 
 
         </>
