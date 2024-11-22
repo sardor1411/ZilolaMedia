@@ -121,14 +121,14 @@ function App() {
                     data-twe-nav-link-ref
                   >Bekzod</NavLink>
                 </li> */}
-                <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center " data-twe-nav-item-ref>
+                {/* <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center " data-twe-nav-item-ref>
                   <NavLink
                     to="/workers"
                     className="text-black/60 transition duration-200 hover:text-white active:bg-red-500 hover:rounded-[20px] hover:ease-in-out focus:text-white active:text-white motion-reduce:transition-none dark:text-white/60 dark:hover:text-white/80 dark:focus:text-white/80 dark:active:text-white/80 lg:px-2"
                     href="#"
                     data-twe-nav-link-ref
                   >Workers</NavLink>
-                </li>
+                </li> */}
                 <li className="mb-4 lg:mb-0 lg:pe-2 flex justify-center" data-twe-nav-item-ref>
                   <NavLink
                     to="/signin"
@@ -205,22 +205,28 @@ function App() {
 
       <Routes>
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/signup" element={<SignUp />} />
         <Route path="/workers" element={<Workers />} />
         <Route path="/jadval" element={<Jadval />} />
         <Route path="/home" element={<Home />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/editdata" element={<IditData />} />
-
         <Route path="/createdata" element={<CreateData />} />
         <Route path="/bossanaliz" element={<BossAnaliz />} />
-        {/* <Route path='/dashboardtwo' element={<DashboardTwo />} /> */}
         <Route path="/bekzod" element={<Bekzod />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/dashboard" element={<ProtectRouteAdmin><ImageProvider><Dashboard /></ImageProvider></ProtectRouteAdmin>} />
-        <Route path="/search" element={<Search />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectRouteAdmin>
+              <Dashboard />
+            </ProtectRouteAdmin>
+          }
+        />
       </Routes>
+
     </>
   );
 }
 
 export default App;
+
