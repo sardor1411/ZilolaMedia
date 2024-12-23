@@ -13,6 +13,7 @@ import { IoClose } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { FaPlus } from 'react-icons/fa'; // Icon importi
 import { MdCreateNewFolder } from "react-icons/md";
+import { FaRegComment } from "react-icons/fa";
 
 
 
@@ -21,6 +22,9 @@ import { MdCreateNewFolder } from "react-icons/md";
 const Dashboard = () => {
   const [box, setBox] = useState([]);
   const [title, setTitle] = useState('');
+  const [number, setNumber] = useState();
+  const [comment, setComment] = useState('');
+
   const [des, setDes] = useState('');
   const [img, setImg] = useState(null);
   const [imgUrl, setImgUrl] = useState('');
@@ -87,8 +91,8 @@ const Dashboard = () => {
     setShowForm(true);
     if (title === "" || img === null || montaj === "" || firstData === "" || !montajchilarchecked || !operatorschecked) {
       return notification.error({
-        message: "Input bo'sh",
-        description: "Malumot to'liq kiritilmagan"
+        message: "Joylarni to'ldirishni unutmang",
+        description: ""
       });
     }
 
@@ -119,6 +123,8 @@ const Dashboard = () => {
           const elyorName = elyorChecked ? 'Elyor' : '';
 
           await addDoc(data, {
+            number,
+            comment,
             title,
             descript: des,
             img: downloadURL,
@@ -167,9 +173,11 @@ const Dashboard = () => {
     console.log(`Deleted post with id: ${id}`);
   };
 
-  const handleEdit = (id, title, descript, img, montaj, firstData, bekzod, siroj, murod) => {
+  const handleEdit = (id, title, descript, img, montaj, firstData, bekzod, siroj, murod, number, comment) => {
     setId(id);
     setTitle(title);
+    setNumber(number);
+    setComment(comment);
     setDes(descript);
     setImgUrl(img);
     setMontaj(montaj);
@@ -206,6 +214,8 @@ const Dashboard = () => {
 
 
     await updateDoc(updateData, {
+      comment,
+      number,
       title,
       img: imgUrl,
       montaj,
@@ -256,6 +266,8 @@ const Dashboard = () => {
   };
 
   const resetForm = () => {
+    setComment("");
+    setNumber("");
     setTitle("");
     setDes("");
     setImg(null);
@@ -352,7 +364,7 @@ const Dashboard = () => {
   const [openVideo, setopenVideo] = useState({});
 
 
-  // Function to toggle the visibility of the Montajchilar and Video Operator lists
+
   const toggleMontaj = (id) => {
     setopenMontaj((prev) => ({
       ...prev,
@@ -365,6 +377,14 @@ const Dashboard = () => {
       [id]: !prev[id] // Toggle the block with the given id
     }));
   };
+  const toggleComment = (id) => {
+    setopenComment((prev) => ({
+      ...prev,
+      [id]: !prev[id] // Toggle the block with the given id
+    }));
+  };
+
+  const [openComment, setopenComment] = useState({});
 
   // SearchByDate komponenti
   const SearchByDate = ({ setSearchResults }) => {
@@ -457,6 +477,20 @@ const Dashboard = () => {
                     className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Telefon raqam"
+                    className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
+                    value={number}
+                    onChange={(e) => setNumber(e.target.value)}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Izoh"
+                    className="block w-full p-3 mb-4 border border-gray-300 rounded-md"
+                    value={comment}
+                    onChange={(e) => setComment(e.target.value)}
                   />
                   <input
                     type="file"
@@ -628,12 +662,14 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {searchResults.length > 0 ? (
           searchResults.map((mall) => (
-            <div className="flex justify-center items-center mt-[100px]" key={mall.id}>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden w-80 text-center transition-transform transform hover:-translate-y-1">
-                <img src={mall.img} alt="Image" className="w-full h-44 object-cover" />
+            <div className="flex justify-center items-center mt-[100px] " key={mall.id}>
+              <div className="bg-white rounded-xl shadow-lg overflow-hidden w-80 text-center transition-transform transform hover:-translate-y-1 ">
+                <img src={mall.img} alt="Image" className="w-full h-44 object-cover " />
                 <div className="p-5">
                   <p className="text-gray-500 text-sm">{mall.firstData}</p>
                   <h2 className="my-2 text-2xl font-bold text-gray-800">{mall.title}</h2>
+
+
 
                   <p className="text-gray-700 text-sm">
                     Montaj bajarilganmi: <span className="text-green-500 font-bold">{mall.montaj}</span>
@@ -705,10 +741,22 @@ const Dashboard = () => {
 
             <div className="flex justify-center items-center mt-[100px]" key={mall.id}>
               <div className="bg-white rounded-xl shadow-lg overflow-hidden w-80 text-center transition-transform transform hover:-translate-y-1">
-                <img src={mall.img} alt="Image" className="w-full h-44 object-cover" />
+                <img src={mall.img} alt="Image" className="w-full h-44 object-cover bg-black" />
                 <div className="p-5">
                   <p className="text-gray-500 text-sm">{mall.firstData}</p>
+
+
                   <h2 className="my-2 text-2xl font-bold text-gray-800">{mall.title}</h2>
+                  {/* <h2 className="my-2 text-2xl font-bold text-gray-800">{mall.comment}</h2> */}
+                  <button
+                    type="button"
+                    onClick={() => window.location.href = `tel:+998 ${mall.number}`} // Telefon raqamiga o'tish
+                    className="mb-3 text-sm font-medium px-4 py-2 rounded-lg  text-black shadow-md hover:shadow-lg hover:scale-105 transition-transform duration-300"
+                  >
+                    📞 Call: +998 {mall.number}
+                  </button>
+
+
 
                   <p className="text-gray-700 text-sm">
                     Montaj bajarilganmi: <span className="text-green-500 font-bold">{mall.montaj}</span>
@@ -736,7 +784,7 @@ const Dashboard = () => {
                     <div className="flex justify-between items-center cursor-pointer" onClick={() => toggleVideo(mall.id)}>
                       <h2 className="text-[18px]">Video Operator:</h2>
                       <span className={`transform transition-transform ${openVideo[mall.id] ? 'rotate-90' : ''}`}>
-                        ➤ {/* Replace this with an icon if preferred */}
+                        ➤
                       </span>
                     </div>
                     <div
@@ -751,6 +799,18 @@ const Dashboard = () => {
                       <p className="text-[18px]">{mall.elyor}</p>
                     </div>
                   </div>
+
+                  <div className="flex justify-between items-center cursor-pointer mb-2 border" onClick={() => toggleComment(mall.id)}>
+                    <div className="w-[90%] m-auto mt-4">
+                      <textarea
+                        value={mall.comment} // `mall.comment` ni to'g'ri ishlatish
+                        onChange={(e) => handleCommentChange(e, mall.id)} // Foydalanuvchi izohni o'zgartirishi uchun
+                        className="w-full h-[100px] p-2 text-[16px] border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-transform transform resize-none"
+                        placeholder="Izohingizni bu yerga yozing..."
+                      ></textarea>
+                    </div>
+                  </div>
+
 
                   <div className="flex justify-between mb-4">
                     <button
