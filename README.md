@@ -16,5 +16,5 @@ Bu proyekt Ermuhammedov Sardor tomonidan yaratilgan. Ushbu proyekt bilan bog'liq
 ## Litsenziya
 Ushbu proyekt MIT litsenziyasi asosida rivojlantirilgan.
 
-## Yordam
+## Yordam 
 Agar dastur ishlashida yoki kodni o'zgartirishda yordam kerak bo'lsa, iltimos, email([sardordevcompany@gmail.com]) orqali murojaat qiling.  
